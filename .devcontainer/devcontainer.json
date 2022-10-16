@@ -10,13 +10,6 @@
   },
   "customizations": {
     "vscode": {
-      "settings": {
-        "terminal.integrated.profiles.linux": {
-          "bash": {
-            "path": "/bin/bash"
-          }
-        }
-      },
       "extensions": [
         "redhat.ansible",
         "EditorConfig.EditorConfig",
