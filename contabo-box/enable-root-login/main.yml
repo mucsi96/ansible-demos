@@ -1,0 +1,8 @@
+- name: My first playbook
+  hosts: contabo
+  gather_facts: false
+
+  tasks:
+    - name: Print message
+      ansible.builtin.debug:
+        msg: "Hello world!"
