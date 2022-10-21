@@ -1,14 +1,11 @@
-- name: My first playbook
-  hosts: contabo
+- name: Enable root login
+  hosts: cluster
   become: true
   gather_facts: false
-  vars:
-    root_password: "123"
+  vars_files:
+    - vars/main.yaml
 
   tasks:
-    - name: Print message
-      ansible.builtin.debug:
-        msg: "Hello world!"
     - name: Update Root user's Password
       ansible.builtin.user:
         name: root

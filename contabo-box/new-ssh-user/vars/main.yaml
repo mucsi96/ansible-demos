@@ -1,0 +1,3 @@
+---
+ssh_key_name: local_cluster1
+username: deploy

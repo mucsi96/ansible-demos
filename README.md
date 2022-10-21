@@ -25,7 +25,7 @@ ufw allow <PORT_NUMBER>/tcp
 
 ```bash
 # From local machine
-ssh-keygen -t rsa
+ssh-keygen -t ed25519
 # As filename provide <SERVER_NAME>_ed25519
 ssh-copy-id -p<YOUR_PORT_NUMBER><YOUR_USERNAME>@<YOUR_IP>
 

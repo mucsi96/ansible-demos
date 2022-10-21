@@ -1,0 +1,46 @@
+- name: SSH Hardening
+  hosts: cluster
+  become: true
+  vars_files:
+    - vars/main.yaml
+  vars:
+    new_root_password: "{{ lookup('ansible.builtin.password', '/dev/null', seed=inventory_hostname) }}"
+  tasks:
+    - name: Change root password
+      ansible.builtin.user:
+        name: root
+        state: present
+        password: "{{ new_root_password | password_hash('sha512', 65534 | random(seed=inventory_hostname) | string) }}"
+    - name: Change SSH port
+      ansible.builtin.lineinfile:
+        dest: "/etc/ssh/sshd_config"
+        regexp: "^#?Port"
+        line: "Port {{ ssh_port }}"
+      notify: "Restart sshd"
+    - name: Update apt repo and cache on all Debian/Ubuntu boxes
+      ansible.builtin.apt:
+        update_cache: true
+        force_apt_get: true
+    - name: Upgrade all packages on servers
+      ansible.builtin.apt:
+        upgrade: dist
+        force_apt_get: true
+    - name: Check if a reboot is needed on all servers
+      register: reboot_required_file
+      ansible.builtin.stat:
+        path: /var/run/reboot-required
+        get_md5: false
+    - name: Reboot the box if kernel updated
+      ansible.builtin.reboot:
+        msg: "Reboot initiated by Ansible for kernel updates"
+        connect_timeout: 5
+        reboot_timeout: 300
+        pre_reboot_delay: 0
+        post_reboot_delay: 30
+        test_command: uptime
+      when: reboot_required_file.stat.exists
+  handlers:
+    - name: Restart sshd
+      ansible.builtin.service:
+        name: sshd
+        state: restarted
