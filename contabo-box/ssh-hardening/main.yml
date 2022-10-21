@@ -20,6 +20,7 @@
     - name: Update apt repo and cache on all Debian/Ubuntu boxes
       ansible.builtin.apt:
         update_cache: true
+        cache_valid_time: 3600
         force_apt_get: true
     - name: Upgrade all packages on servers
       ansible.builtin.apt:
@@ -39,6 +40,20 @@
         post_reboot_delay: 30
         test_command: uptime
       when: reboot_required_file.stat.exists
+    - name: Disable SSH root login
+      ansible.builtin.lineinfile:
+        dest: "/etc/ssh/sshd_config"
+        regexp: "^#?PermitRootLogin"
+        line: "PermitRootLogin no"
+      notify:
+        - Restart sshd
+    - name: Disable passwd login
+      ansible.builtin.lineinfile:
+        dest: "/etc/ssh/sshd_config"
+        regexp: "^#?PasswordAuthentication"
+        line: "PasswordAuthentication no"
+      notify:
+        - Restart sshd
   handlers:
     - name: Restart sshd
       ansible.builtin.service:
