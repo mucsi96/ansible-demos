@@ -11,10 +11,11 @@
   "customizations": {
     "vscode": {
       "extensions": [
-        "redhat.ansible",
-        "EditorConfig.EditorConfig",
-        "esbenp.prettier-vscode"
-      ]
+		"redhat.ansible",
+		"EditorConfig.EditorConfig",
+		"esbenp.prettier-vscode",
+		"ms-kubernetes-tools.vscode-kubernetes-tools"
+	]
     }
   },
   "mounts": [

@@ -1,0 +1,21 @@
+- name: SSH Hardening
+  hosts: cluster
+  become: true
+  vars_files:
+    - vars/main.yaml
+  tasks:
+    - name: Download k3s install script
+      ansible.builtin.get_url:
+        url: https://get.k3s.io
+        dest: ~/k3s_install.sh
+        mode: a+x
+    - name: Execute k3s_install.sh
+      ansible.builtin.shell: ./k3s_install.sh >> ./k3s_install_log.txt
+      args:
+        chdir: "~"
+        creates: k3s_install_log.txt
+    - name: Fetch config
+      ansible.builtin.fetch:
+        src: /etc/rancher/k3s/k3s.yaml
+        dest: ~/.kube/config
+        flat: true
