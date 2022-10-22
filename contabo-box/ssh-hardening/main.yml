@@ -13,7 +13,7 @@
         password: "{{ new_root_password | password_hash('sha512', 65534 | random(seed=inventory_hostname) | string) }}"
     - name: Change SSH port
       ansible.builtin.lineinfile:
-        dest: "/etc/ssh/sshd_config"
+        dest: /etc/ssh/sshd_config
         regexp: "^#?Port"
         line: "Port {{ ssh_port }}"
       notify: "Restart sshd"
@@ -42,14 +42,14 @@
       when: reboot_required_file.stat.exists
     - name: Disable SSH root login
       ansible.builtin.lineinfile:
-        dest: "/etc/ssh/sshd_config"
+        dest: /etc/ssh/sshd_config
         regexp: "^#?PermitRootLogin"
         line: "PermitRootLogin no"
       notify:
         - Restart sshd
     - name: Disable passwd login
       ansible.builtin.lineinfile:
-        dest: "/etc/ssh/sshd_config"
+        dest: /etc/ssh/sshd_config
         regexp: "^#?PasswordAuthentication"
         line: "PasswordAuthentication no"
       notify:
