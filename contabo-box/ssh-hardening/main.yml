@@ -17,21 +17,21 @@
         regexp: "^#?Port"
         line: "Port {{ ssh_port }}"
       notify: "Restart sshd"
-    - name: Update apt repo and cache on all Debian/Ubuntu boxes
+    - name: Update apt repo and cache
       ansible.builtin.apt:
         update_cache: true
         cache_valid_time: 3600
         force_apt_get: true
-    - name: Upgrade all packages on servers
+    - name: Upgrade all packages
       ansible.builtin.apt:
         upgrade: dist
         force_apt_get: true
-    - name: Check if a reboot is needed on all servers
+    - name: Check if a reboot is needed
       register: reboot_required_file
       ansible.builtin.stat:
         path: /var/run/reboot-required
         get_md5: false
-    - name: Reboot the box if kernel updated
+    - name: Reboot if kernel updated
       ansible.builtin.reboot:
         msg: "Reboot initiated by Ansible for kernel updates"
         connect_timeout: 5
@@ -54,8 +54,49 @@
         line: "PasswordAuthentication no"
       notify:
         - Restart sshd
+
+    - name: Disable incomming traffic by default
+      community.general.ufw:
+        default: deny
+        direction: incoming
+      notify: Reload UFW
+    - name: Enable outgoing traffic by default
+      community.general.ufw:
+        default: allow
+        direction: outgoing
+      notify: Reload UFW
+    - name: Enable SSH port
+      community.general.ufw:
+        rule: allow
+        port: "{{ ansible_port }}"
+        proto: tcp
+        comment: SSH
+      notify: Reload UFW
+    - name: Enable HTTP
+      community.general.ufw:
+        rule: allow
+        port: http
+        proto: tcp
+      notify: Reload UFW
+    - name: Enable HTTPS
+      community.general.ufw:
+        rule: allow
+        port: https
+        proto: tcp
+      notify: Reload UFW
+    - name: Enable Kubernetes port
+      community.general.ufw:
+        rule: allow
+        port: "6443"
+        proto: tcp
+        comment: Kubernetes
+      notify: Reload UFW
+
   handlers:
     - name: Restart sshd
       ansible.builtin.service:
         name: sshd
         state: restarted
+    - name: Reload UFW
+      community.general.ufw:
+        state: enabled
