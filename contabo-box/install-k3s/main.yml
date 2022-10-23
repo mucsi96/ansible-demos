@@ -3,12 +3,8 @@
   vars_files:
     - vars/main.yaml
   tasks:
-    - name: Get SWAP state
-      ansible.builtin.command:
-        cmd: swapon --show
-      register: swap_state
-      changed_when: false
     - name: Get SWAP file
+      become: true
       ansible.builtin.shell:
         cmd: "cat /etc/fstab | grep swap | awk '{print $1}'"
       register: swap_file
@@ -17,18 +13,21 @@
       become: true
       ansible.builtin.command:
         cmd: swapoff --all
-      when: swap_state.stdout | length > 0
+      when: ansible_swaptotal_mb > 0
     - name: Delete SWAP file
       become: true
       ansible.builtin.file:
         path: "{{ swap_file.stdout }}"
         state: absent
-    - name: Remove all swap entries from fstab
+    - name: Remove swapfile from /etc/fstab
       become: true
       ansible.posix.mount:
-        path: none
+        name: "{{ item }}"
         fstype: swap
         state: absent
+      with_items:
+        - swap
+        - none
 
     - name: Disable incomming traffic by default
       become: true
@@ -73,6 +72,47 @@
         comment: Kubernetes
       notify: Reload UFW
 
+    - name: Install packages that allow apt to be used over HTTPS
+      become: true
+      ansible.builtin.apt:
+        name: "{{ packages }}"
+        state: present
+      vars:
+        packages:
+          - apt-transport-https
+          - ca-certificates
+          - curl
+          - gnupg-agent
+          - software-properties-common
+    - name: Add an apt signing key for Docker
+      become: true
+      ansible.builtin.apt_key:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        state: present
+    - name: Add apt repository for stable version
+      become: true
+      ansible.builtin.apt_repository:
+        repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu xenial stable
+        state: present
+    - name: Install docker and its dependecies
+      become: true
+      ansible.builtin.apt:
+        name: "{{ packages }}"
+        state: present
+        update_cache: true
+      vars:
+        packages:
+          - docker-ce
+          - docker-ce-cli
+          - containerd.io
+      notify:
+        - Start Docker service
+    - name: Add user to docker group
+      become: true
+      ansible.builtin.user:
+        name: "{{ ansible_user }}"
+        group: docker
+
     - name: Download k3s install script
       become: true
       ansible.builtin.get_url:
@@ -103,8 +143,13 @@
         insertafter: "server: https"
         line: "    insecure-skip-tls-verify: false"
       delegate_to: 127.0.0.1
+
   handlers:
     - name: Reload UFW
       become: true
       community.general.ufw:
         state: enabled
+    - name: Start Docker service
+      ansible.builtin.service:
+        name: docker
+        state: started
