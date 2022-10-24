@@ -6,11 +6,12 @@ on:
       - main
 
 jobs:
-  build:
+  build-client-image:
     runs-on: ubuntu-latest
     defaults:
       run:
         shell: bash
+        working-directory: ./src
     steps:
       - uses: actions/checkout@v3
         with:
@@ -19,7 +20,6 @@ jobs:
         id: version
         env:
           TAG_PREFIX: client
-        working-directory: ./src
         run: ../scripts/version.sh | sed s/^/VERSION=/ >> $GITHUB_OUTPUT
       - name: Get version
         run: echo "The version is ${{ steps.version.outputs.VERSION }}"
