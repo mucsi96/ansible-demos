@@ -2,12 +2,17 @@
 
 read -d EOF
 tag_prefix=$(echo "$TAG_PREFIX")
-ignore=$(echo "$IGNORE" | tr ',' '\n' | sed "s/^/:(exclude)/" | tr '\n' ' ')
+ignore=
 
 if [[ -z "$tag_prefix" ]]
 then
     echo "Missing tag_prefix" >&2
     exit 2
+fi
+
+if [[ ! -z "$IGNORE" ]]
+then
+    ignore=$(echo "$IGNORE" | tr ',' '\n' | sed "s/^/:(exclude)/" | tr '\n' ' ')
 fi
 
 prev_tag=$(git describe --tags --match=$tag_prefix-* --abbrev=0)
