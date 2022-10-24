@@ -1,4 +1,4 @@
-- name: Enable root login
+- name: New SSH user
   hosts: cluster
   become: true
   gather_facts: false

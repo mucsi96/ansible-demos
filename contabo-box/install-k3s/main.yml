@@ -1,7 +1,5 @@
-- name: SSH Hardening
+- name: Install K3S
   hosts: cluster
-  vars_files:
-    - vars/main.yaml
   tasks:
     - name: Get SWAP file
       become: true
