@@ -1,14 +1,13 @@
 #!/bin/bash
 
-read -d EOF
-tag_prefix=$(echo "$TAG_PREFIX")
-ignore=
-
-if [[ -z "$tag_prefix" ]]
+if [[ -z "$TAG_PREFIX" ]]
 then
     echo "Missing tag_prefix" >&2
     exit 2
 fi
+
+tag_prefix=$(echo "$TAG_PREFIX")
+ignore=
 
 if [[ ! -z "$IGNORE" ]]
 then
