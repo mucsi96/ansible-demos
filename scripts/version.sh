@@ -21,7 +21,8 @@ then
     if [ $? -eq 0 ]
     then
         version=$(echo "$prev_tag" | sed "s/^$tag_prefix-//")
-        echo -n "$version"
+        echo -n "changed="
+        echo -n "version=$version"
         exit 0
     fi
 fi
@@ -38,4 +39,5 @@ fi
 git tag "$tag_prefix-$new_version"
 git push --tags > /dev/null
 
-echo -n "$new_version"
+echo -n "changed=true"
+echo -n "version=$new_version"

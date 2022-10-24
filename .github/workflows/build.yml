@@ -20,9 +20,13 @@ jobs:
         id: version
         env:
           TAG_PREFIX: client
-        run: ../scripts/version.sh | sed s/^/VERSION=/ >> $GITHUB_OUTPUT
-      - name: Get version
-        run: echo "The version is ${{ steps.version.outputs.VERSION }}"
+        run: ../scripts/version.sh >> $GITHUB_OUTPUT
+      - name: Get new version
+        if: steps.version.outputs.changed == 'true'
+        run: echo "The new version is ${{ steps.version.outputs.version }}"
+      - name: Get current version
+        if: steps.version.outputs.changed != 'true'
+        run: echo "The current version is ${{ steps.version.outputs.version }}"
       # - name: Authenticate to Docker Hub
       #   run: |
       #       docker login \
