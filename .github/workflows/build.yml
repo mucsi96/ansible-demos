@@ -1,0 +1,28 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Set version
+        id: version
+        run: echo 1.0.0 | sed /^/VERSION=/ >> $GITHUB_OUTPUT
+      - name: Get version
+        run: echo "The version is ${{ steps.version.outputs.VERSION }}"
+      # - name: Authenticate to Docker Hub
+      #   run: |
+      #       docker login \
+      #         --username ${{ secrets.DOCKER_HUB_USERNAME }} \
+      #         --password ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+      # - 
