@@ -17,7 +17,7 @@ then
     if [ $? -eq 0 ]
     then
         version=$(echo "$prev_tag" | sed "s/^$tag_prefix-//")
-        jq -n --arg version "$version" '{"version":$version}'
+        echo -n "$version"
         exit 0
     fi
 fi
