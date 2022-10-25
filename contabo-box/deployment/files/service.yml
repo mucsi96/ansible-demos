@@ -1,8 +1,8 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: client
-  namespace: default
+  name: "{{ name }}"
+  namespace: "{{ namespace }}"
 spec:
   type: ClusterIP
   ports:
@@ -10,4 +10,4 @@ spec:
     name: http
     targetPort: http
   selector:
-    app: client
+    app: "{{ name }}"
