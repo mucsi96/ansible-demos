@@ -4,9 +4,10 @@ metadata:
   name: client
   namespace: default
 spec:
-  selector:
-    app: client
-  type: NodePort
+  type: ClusterIP
   ports:
   - port: 8080
+    name: http
     targetPort: http
+  selector:
+    app: client
