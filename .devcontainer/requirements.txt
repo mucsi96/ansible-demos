@@ -1,3 +1,3 @@
-ansible
+ansible == 6.5.0
 ansible-lint
-kubernetes
+kubernetes == 24.2.0
