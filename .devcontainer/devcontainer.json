@@ -11,15 +11,13 @@
   "customizations": {
     "vscode": {
       "extensions": [
-		"redhat.ansible",
-		"EditorConfig.EditorConfig",
-		"esbenp.prettier-vscode",
-		"ms-kubernetes-tools.vscode-kubernetes-tools"
-	]
+        "redhat.ansible",
+        "EditorConfig.EditorConfig",
+        "esbenp.prettier-vscode",
+        "ms-kubernetes-tools.vscode-kubernetes-tools"
+      ]
     }
   },
-  "mounts": [
-    "source=${localEnv:HOME}${localEnv:USERPROFILE}/.ssh,target=/home/vscode/.ssh,type=bind,consistency=consistent"
-  ],
-  "remoteUser": "vscode"
+  "remoteUser": "vscode",
+  "postStartCommand": "git config --global --add safe.directory ${containerWorkspaceFolder}"
 }
