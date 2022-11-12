@@ -1,0 +1,5 @@
+- name: Create Kubernetes cluster
+  hosts: cluster
+  gather_facts: false
+  roles:
+    - enable_root_login

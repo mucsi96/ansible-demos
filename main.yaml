@@ -1,0 +1,7 @@
+- name: Create Kubernetes cluster
+  hosts: cluster
+  roles:
+    - disable_swap
+    - install_docker
+    - install_k3s
+    - deploy_kubernetes
