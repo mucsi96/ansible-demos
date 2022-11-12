@@ -1,5 +1,10 @@
-- name: Create Kubernetes cluster
+- name: Enable root login
   hosts: cluster
   gather_facts: false
   roles:
-    - enable_root_login
+    - role: enable_root_login
+      vars:
+        root_password: "123"
+        ansible_user: vagrant
+        ansible_ssh_pass: vagrant
+        ansible_port: 22
