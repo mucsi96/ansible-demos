@@ -63,7 +63,7 @@ jobs:
             1-${{ runner.os }}-pip-
 
       - name: Install Ansible
-        run: pip3 install ansible==6.5.0
+        run: python3 -m pip install --user ansible==6.5.0
 
       - name: Whoami
         run: whoami
