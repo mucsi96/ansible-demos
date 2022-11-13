@@ -1,3 +1,7 @@
+- name: Check internet connection
+  ansible.builtin.uri:
+    url: "https://ubuntu.com"
+  timeout: 3
 - name: Install packages that allow apt to be used over HTTPS
   become: true
   ansible.builtin.apt:

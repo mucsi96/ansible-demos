@@ -1,43 +1,24 @@
 # ansible-demos
 Demo project for Ansible
 
-## Hardening Server Security
-
-### Change Root Password
+## Create box
 
 ```bash
-sudo -i
-passwd
+vagrant up
 ```
 
-### Change SSH Port
+## Run Ansible playbooks
 
 ```bash
-sudo -i
-vi /etc/ssh/sshd_config
-# Find the line containing Port 22.
-# Replace the number with any value from 1024 to 65536 (command “I” in the vi editor). If there is a hashtag symbol next to “Port”, erase it.
-systemctl restart ssh
-ufw allow <PORT_NUMBER>/tcp
+ap playbooks/enable_root_login.yaml playbooks/new-ssh-user.yaml playbooks/ssh-hardening.yaml playbooks/update-packages.yaml playbooks/deploy-cluster.yaml
 ```
 
-### Use SSH Key Authentication
+## Destroy the box
 
 ```bash
-# From local machine
-ssh-keygen -t ed25519
-# As filename provide <SERVER_NAME>_ed25519
-ssh-copy-id -p<YOUR_PORT_NUMBER><YOUR_USERNAME>@<YOUR_IP>
-
+vagrant destroy
+./clean.sh
 ```
-
-### Perform update
-
-```bash
-sudo apt-get update # update package index files
-sudo apt-get upgrade # upgrade version of the operating system
-```
-
 
 # Resources
 

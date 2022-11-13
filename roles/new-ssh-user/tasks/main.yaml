@@ -13,7 +13,7 @@
   delegate_to: localhost
 - name: Create folder for target SSH Key
   ansible.builtin.file:
-    path: .ssh
+    path: "{{ private_key_file | dirname }}"
     state: directory
     mode: 0777
   delegate_to: localhost

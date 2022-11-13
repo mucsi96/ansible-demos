@@ -1,7 +1,0 @@
-[all:vars]
-ansible_user=deploy
-ansible_ssh_private_key_file=~/.ssh/local_cluster1/id_ed25519
-ansible_port=53024
-
-[cluster]
-192.168.33.10

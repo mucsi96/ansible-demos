@@ -1,3 +1,7 @@
+- name: Check internet connection
+  ansible.builtin.uri:
+    url: "https://ubuntu.com"
+  timeout: 3
 - name: Download k3s install script
   become: true
   ansible.builtin.get_url:
@@ -23,14 +27,14 @@
 
 - name: Create local kubernetes config folder
   ansible.builtin.file:
-    path: ~/.kube
+    path: "{{ local_kube_config | dirname }}"
     state: directory
     mode: 0770
   delegate_to: 127.0.0.1
-  when: create_local_kubernetes_config
+  when: local_kube_config
 - name: Create local kubernetes config
   ansible.builtin.copy:
-    dest: ~/.kube/config
+    dest: "{{ local_kube_config }}"
     content: "{{ lookup('ansible.builtin.template', 'kube-config.yml') }}"
     mode: 0660
   vars:
@@ -39,7 +43,7 @@
     client_key_data: "{{ kube_config.users.0.user['client-key-data'] }}"
     host: "{{ inventory_hostname }}"
   delegate_to: 127.0.0.1
-  when: create_local_kubernetes_config
+  when: local_kube_config
 
 - name: Create remote kubernetes config folder
   ansible.builtin.file:
