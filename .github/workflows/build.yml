@@ -50,7 +50,7 @@ jobs:
   local-ansible-deploy:
     runs-on: macos-12
     needs: build-client-image
-    if: always()
+    if: success()
     steps:
       - uses: actions/checkout@v3
 
@@ -64,6 +64,9 @@ jobs:
 
       - name: Install Ansible
         run: pip3 install ansible==6.5.0
+
+      - name: Show Ansible version
+        run: ansible-playbook --version
 
       - name: Show Vagrant version
         run: vagrant --version
