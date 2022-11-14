@@ -62,11 +62,8 @@ jobs:
           restore-keys: |
             1-${{ runner.os }}-pip-
 
-      - name: Install python packages
-        run: pip3 install sshpass
-
       - name: Install Ansible
-        run: brew install ansible
+        run: brew install hudochenkov/sshpass/sshpass ansible
 
       - name: Show Ansible version
         run: ansible-playbook --version
