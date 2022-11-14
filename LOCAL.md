@@ -84,7 +84,7 @@ vagrant up
 ### SSH into the box
 
 ```bash
-ssh -p 2222 vagrant@192.168.33.10
+ssh -p 2222 vagrant@192.168.56.11
 ```
 
 passowrd is `vagrant`
