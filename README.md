@@ -1,5 +1,9 @@
 # ansible-demos
+
 Demo project for Ansible
+
+[![CI](https://github.com/mucsi96/ansible-demos/actions/workflows/build.yml/badge.svg)](https://github.com/mucsi96/ansible-demos/actions/workflows/build.yml)
+
 
 ## Create box
 
